@@ -5,7 +5,12 @@
 #include <iomanip>
 using namespace std;
 // Constructor por defecto, inicializa los atributos vacíos
-Tratamiento::Tratamiento() {}
+Tratamiento::Tratamiento() {
+    paciente = "",
+    medicamento = "",
+    dosis = "",
+    periodo = "",        
+}
 // Constructor que permite inicializar un tratamiento con datos específicos
 Tratamiento::Tratamiento(string paciente, string medicamento, string dosis, string periodo) {
     this->paciente = paciente;

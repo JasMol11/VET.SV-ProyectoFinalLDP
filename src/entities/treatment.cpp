@@ -3,12 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-
 using namespace std;
-
 // Constructor por defecto, inicializa los atributos vacíos
 Tratamiento::Tratamiento() {}
-
 // Constructor que permite inicializar un tratamiento con datos específicos
 Tratamiento::Tratamiento(string paciente, string medicamento, string dosis, string periodo) {
     this->paciente = paciente;
@@ -16,7 +13,6 @@ Tratamiento::Tratamiento(string paciente, string medicamento, string dosis, stri
     this->dosis = dosis;
     this->periodo = periodo;
 }
-
 // Captura los datos de un tratamiento desde la entrada 
 void Tratamiento::capturarDatos() {
     cin.ignore(); // Limpia el buffer antes de tomar entradas con getline()
@@ -29,7 +25,6 @@ void Tratamiento::capturarDatos() {
     cout << "Ingrese período de tratamiento: ";
     getline(cin, periodo);
 }
-
 // Muestra la información de un tratamiento en un forma ordenada especificando informacion  que se debe brindar
 void Tratamiento::mostrar() {
     cout << "\nInformación del Tratamiento\n";
@@ -99,7 +94,7 @@ void Tratamiento::editarTratamiento(string nombrePaciente) {
     while (archivo.read(reinterpret_cast<char*>(&tratamiento), sizeof(Tratamiento))) {
         if (tratamiento.paciente == nombrePaciente) {
          encontrado = true;
-            
+        
         // Calcula la posición exacta en el archivo para editar el tratamiento
         posicion = archivo.tellg() - static_cast<streampos>(sizeof(Tratamiento));
 

@@ -1,3 +1,4 @@
+//CREACION DE CLASE Tratamiento con sus respectivos atributos y metodos a utilizar
 #ifndef TRATAMIENTO_H
 #define TRATAMIENTO_H
 

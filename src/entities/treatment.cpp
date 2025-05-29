@@ -1,13 +1,15 @@
-#include "Tratamiento.h" //Importara la Clase Tratamientocon sus atributos y metodos definida anteriormente 
-#include <iostream>//Ayudara a Entrada y salida de datos
-#include <fstream>//Ayudara a manipular datos
+//Se incluye la libreria "Tratamiento.h"
+#include "Tratamiento.h"
+#include <iostream>
+#include <fstream>
 #include <iomanip>
 
 using namespace std;
 
-// Constructor vacio que se utilizara mas adelante
-Tratamiento::Tratamiento(){}
-// Constructor para crear objeto con sus parámetros establecidos
+// Constructor por defecto, inicializa los atributos vacíos
+Tratamiento::Tratamiento() {}
+
+// Constructor que permite inicializar un tratamiento con datos específicos
 Tratamiento::Tratamiento(string paciente, string medicamento, string dosis, string periodo) {
     this->paciente = paciente;
     this->medicamento = medicamento;
@@ -15,9 +17,9 @@ Tratamiento::Tratamiento(string paciente, string medicamento, string dosis, stri
     this->periodo = periodo;
 }
 
-// Método para ingresar y capturar datos de Tratamientos
+// Captura los datos de un tratamiento desde la entrada 
 void Tratamiento::capturarDatos() {
-    cin.ignore(); // Usaremospara limpiar el buffer antes de getline(), evitando errores en la captura de datos
+    cin.ignore(); // Limpia el buffer antes de tomar entradas con getline()
     cout << "Ingrese nombre del paciente: ";
     getline(cin, paciente);
     cout << "Ingrese nombre del medicamento: ";
@@ -28,90 +30,92 @@ void Tratamiento::capturarDatos() {
     getline(cin, periodo);
 }
 
-// Método para mostrar datos en pantalla de un tratamiento
+// Muestra la información de un tratamiento en un forma ordenada especificando informacion  que se debe brindar
 void Tratamiento::mostrar() {
-    cout << "\n---- Tratamiento ----\n";
-    cout << left << setw(20) << "Paciente:" << paciente << endl;
-    cout << left << setw(20) << "Medicamento:" << medicamento << endl;
-    cout << left << setw(20) << "Dosis:" << dosis << endl;
-    cout << left << setw(20) << "Periodo:" << periodo << endl;
+    cout << "\nInformación del Tratamiento\n";
+    cout << left << setw(50) << "Paciente:" << paciente << endl;
+    cout << left << setw(50) << "Medicamento:" << medicamento << endl;
+    cout << left << setw(50) << "Dosis:" << dosis << endl;
+    cout << left << setw(50) << "Periodo:" << periodo << endl;
 }
-
-// Método para guardar en archivo binario al cual llamaremos "tratamiento.dat"
+// Guarda el tratamiento en un archivo binario dentro de "treatments.dat"
 void Tratamiento::guardarEnArchivo() {
-    ofstream archivo("tratamientos.dat", ios::binary | ios::app);
+    ofstream archivo("treatments.dat", ios::binary | ios::app);
     if (!archivo) {
-    cerr << "Error al abrir el archivo.\n";
-    return;
+        cerr << "Error al abrir el archivo de tratamientos.\n";
+        return;
     }
+    // Escribe los datos del tratamiento en formato binario
     archivo.write(reinterpret_cast<const char*>(this), sizeof(Tratamiento));
     archivo.close();
     cout << "Tratamiento guardado correctamente.\n";
 }
-// Método para leer los tratamientos guardados
+// Lee todos los tratamientos guardados y los muestra en pantalla
 void Tratamiento::leerArchivo() {
-    ifstream archivo("tratamientos.dat", ios::binary);
-    Tratamiento tratamiento;
+    ifstream archivo("treatments.dat", ios::binary);
+    Tratamiento tratamiento; 
     if (!archivo) {
-    cerr << "No se pudo abrir el archivo.\n";
-    return;
+        cerr << "No se pudo abrir el archivo de tratamientos.\n";
+        return;
     }
-    cout << "\n--- Tratamientos Guardados ---\n";
+    cout << "\nTratamientos registrados:\n";
     while (archivo.read(reinterpret_cast<char*>(&tratamiento), sizeof(Tratamiento))) {
         tratamiento.mostrar();
     }
     archivo.close();
 }
-// Método para buscar un tratamiento por nombre de paciente
+// Busca un tratamiento en el archivo binario por el nombre del paciente
 void Tratamiento::buscarTratamiento(string nombrePaciente) {
-    ifstream archivo("tratamientos.dat", ios::binary);
+    ifstream archivo("treatments.dat", ios::binary);
     Tratamiento tratamiento;
     bool encontrado = false;
     if (!archivo) {
-    cerr << "No se pudo abrir el archivo.\n";
-    return;
+        cerr << "No se pudo abrir el archivo de tratamientos.\n";
+        return;
     }
     while (archivo.read(reinterpret_cast<char*>(&tratamiento), sizeof(Tratamiento))) {
+        // Se verifica si el tratamiento pertenece al paciente buscado
         if (tratamiento.paciente == nombrePaciente) {
             encontrado = true;
+            cout << "\n🔎 Tratamiento encontrado:\n";
             tratamiento.mostrar();
-            break; }
-    }
+            break;
+        } }
     archivo.close();
     if (!encontrado) {
         cout << "No se encontró ningún tratamiento para el paciente: " << nombrePaciente << endl;
     }
 }
-// Método para editar un tratamiento existente por si necesita modificacion el cual ya esta guardado en archivo Binario
+// Permite editar un tratamiento ya registrado en el archivo binario
 void Tratamiento::editarTratamiento(string nombrePaciente) {
-    fstream archivo("tratamientos.dat", ios::binary | ios::in | ios::out); //El prpgrama buscara en la lista del archivo binario la informacion por si la tuviese
+    fstream archivo("treatments.dat", ios::binary | ios::in | ios::out);
     Tratamiento tratamiento;
     bool encontrado = false;
     streampos posicion;
-
     if (!archivo) {
-        cerr << "No se pudo abrir el archivo.\n"; //si no la encuentra mostrara esto en pantalla
+        cerr << "No se pudo abrir el archivo de tratamientos.\n";
         return;
     }
-
     while (archivo.read(reinterpret_cast<char*>(&tratamiento), sizeof(Tratamiento))) {
         if (tratamiento.paciente == nombrePaciente) {
-            encontrado = true;
-            posicion = archivo.tellg() - static_cast<streampos>(sizeof(Tratamiento));
-            cout << "\nTratamiento Actual\n";// al recorrer el programa si encuentra  mostrara la informacion del paciente 
-            tratamiento.mostrar();
-            cout << "\nIngrese nuevos datos:\n"; // dara paso para editar y actualizar
-            tratamiento.capturarDatos();
-            archivo.seekp(posicion);
-            archivo.write(reinterpret_cast<const char*>(&tratamiento), sizeof(Tratamiento));
-            cout << "Tratamiento actualizado correctamente.\n";
-            break;
-        }
-    }
+         encontrado = true;
+            
+        // Calcula la posición exacta en el archivo para editar el tratamiento
+        posicion = archivo.tellg() - static_cast<streampos>(sizeof(Tratamiento));
 
+        cout << "\nTratamiento actual:\n";
+        tratamiento.mostrar();
+        cout << "\nIngrese los nuevos datos:\n";
+        tratamiento.capturarDatos();
+        // Se mueve a la posición adecuada y se sobrescriben los datos antiguos
+        archivo.seekp(posicion);
+        archivo.write(reinterpret_cast<const char*>(&tratamiento), sizeof(Tratamiento));
+        cout << "Tratamiento actualizado correctamente.\n";
+        break;
+        } }
     archivo.close();
-
+    // Si no se encontró el tratamiento mostrara este msj
     if (!encontrado) {
-        cout << "No se encontró ningún tratamiento para el paciente: " << nombrePaciente << endl;
+        cout << " No se encontró ningún tratamiento para el paciente: " << nombrePaciente << endl;
     }
 }

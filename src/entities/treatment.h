@@ -9,6 +9,20 @@ public:
     std::string medicamento;
     std::string dosis;
     std::string periodo;
+
+    // Constructor por defecto vacio
+    Tratamiento();
+    
+    // Constructor con parámetros
+    Tratamiento(std::string paciente, std::string medicamento, std::string dosis, std::string periodo);
+
+    // Métodos a utilizar en desarrollo de  Tratamiento 
+    void capturarDatos();
+    void mostrar();
+    void guardarEnArchivo();
+    static void leerArchivo();
+    static void buscarTratamiento(std::string nombrePaciente);
+    static void editarTratamiento(std::string nombrePaciente);
 };
 
-#endif // CLASE TRATAMIENTO_H
+#endif // TRATAMIENTO_H

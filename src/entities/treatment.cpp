@@ -1,8 +1,6 @@
 //Se incluye la libreria "Tratamiento.h"
 #include "Tratamiento.h"
-#include <iostream>
-#include <fstream>
-#include <iomanip>
+
 using namespace std;
 // Constructor por defecto, inicializa los atributos vacíos
 Tratamiento::Tratamiento() {

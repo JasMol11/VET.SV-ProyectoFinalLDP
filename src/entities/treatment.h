@@ -3,6 +3,9 @@
 #define TRATAMIENTO_H
 
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 
 class Tratamiento {
 public:
